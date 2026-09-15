@@ -24,6 +24,8 @@ npm run preview
 - Révision rapide adaptative, entraînement par thème/difficulté, erreurs pondérées et thèmes faibles.
 - Examen blanc sans correction intermédiaire, seuil configurable, bilan thématique et historique.
 - Catalogue/quiz panneaux, scènes SVG d’intersection, QCM simple et multi-réponses.
+- Banque de 88 questions uniques couvrant priorités, signalisation, vitesse, sécurité, comportement et partage de la route.
+- Coach pédagogique Mistral disponible après chaque correction pour reformuler et donner un exemple simple.
 - Maîtrise par question, dernières réussite/erreur, XP, série, progression journalière et statistiques.
 - Raccourcis `1` à `9` pour sélectionner, `Entrée` pour valider/continuer.
 - Import/export JSON et remise à zéro dans Paramètres.
@@ -43,7 +45,7 @@ src/
 
 ## Données et confidentialité
 
-Toutes les données restent dans `localStorage` sous la clé `cap-code-v1`. Aucun compte, backend, traqueur ou service payant n’est requis. L’export contient progression et banque de questions. L’import accepte une sauvegarde Cap Code et restaure l’état utilisateur.
+Toutes les données de progression restent dans `localStorage` sous la clé `cap-code-v1`. Aucun compte ni traqueur n’est requis. L’export contient progression et banque de questions. L’import accepte une sauvegarde Cap Code et restaure l’état utilisateur. Seule une demande explicite au coach envoie le texte de la question et la demande de l’élève à Mistral via une fonction Cloudflare ; la clé API n’est jamais envoyée au navigateur.
 
 ## Ajouter une question
 
@@ -55,4 +57,16 @@ Modifier `src/data/questions.ts` en utilisant le constructeur `q`. Chaque entré
 
 ## Qualité et évolutions
 
-Lancer `npm test` pour tester comparaison multi-réponses, mémoire des erreurs et priorité adaptative. Évolutions possibles : banque validée par un formateur NC, service worker hors-ligne, minuterie d’examen, lecture audio et synchronisation optionnelle chiffrée.
+Lancer `npm test` pour tester la banque de 88 questions, la comparaison multi-réponses, la mémoire des erreurs et la priorité adaptative. Évolutions possibles : banque validée par un formateur NC, service worker hors-ligne, minuterie d’examen, lecture audio et synchronisation optionnelle chiffrée.
+
+## Déploiement Cloudflare Pages
+
+Le projet Pages s’appelle `cap-code`, construit dans `dist`. Pour tester localement le coach, copier `.dev.vars.example` vers `.dev.vars` puis y placer une clé Mistral valide. Ne jamais versionner ce fichier.
+
+```bash
+npm run build
+npx wrangler pages secret put MISTRAL_API_KEY --project-name=cap-code
+npx wrangler pages deploy dist --project-name=cap-code --branch=main
+```
+
+Dans Cloudflare, associer ensuite le domaine personnalisé `lifepilot.win` au projet Pages. Le domaine racine doit rester géré par la même zone Cloudflare.
