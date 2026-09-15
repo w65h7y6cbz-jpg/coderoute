@@ -1,0 +1,4 @@
+import {describe,expect,it} from 'vitest';import {sameAnswers,updateAfterAnswer,weight} from './engine';import type {AppState,Question} from '../types';
+const q={id:'q',text:'',theme:'Sécurité',subtheme:'',difficulty:'facile',type:'single',options:[],answers:[0],explanation:'',verification:'vérifié'} as Question;
+const state:AppState={mastery:{},exams:[],days:[],xp:0,streak:0,examDate:'',sound:false,animations:true,threshold:35};
+describe('quiz engine',()=>{it('compare les réponses sans dépendre de l’ordre',()=>expect(sameAnswers([2,0],[0,2])).toBe(true));it('mémorise une erreur',()=>{const n=updateAfterAnswer(state,q,false,'2026-01-01T00:00:00Z');expect(n.mastery.q.errors).toBe(1);expect(n.mastery.q.score).toBe(0)});it('priorise une question ratée',()=>{const n=updateAfterAnswer(state,q,false);expect(weight(q,n)).toBeGreaterThan(weight(q,state))})});
