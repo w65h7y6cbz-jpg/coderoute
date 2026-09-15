@@ -45,7 +45,7 @@ src/
 
 ## Données et confidentialité
 
-Toutes les données de progression restent dans `localStorage` sous la clé `cap-code-v1`. Aucun compte ni traqueur n’est requis. L’export contient progression et banque de questions. L’import accepte une sauvegarde Cap Code et restaure l’état utilisateur. Seule une demande explicite au coach envoie le texte de la question et la demande de l’élève à Mistral via une fonction Cloudflare ; la clé API n’est jamais envoyée au navigateur.
+Toutes les données de progression restent dans `localStorage` sous la clé `cap-code-v1`. Aucun compte ni traqueur n’est requis. L’export contient progression et banque de questions. L’import accepte une sauvegarde Cap Code et restaure l’état utilisateur. Seule une demande explicite au coach envoie le texte de la question et la demande de l’élève au modèle Mistral Small 3.1 hébergé par Cloudflare Workers AI. Aucune clé API n’est envoyée au navigateur.
 
 ## Ajouter une question
 
@@ -61,11 +61,10 @@ Lancer `npm test` pour tester la banque de 88 questions, la comparaison multi-r�
 
 ## Déploiement Cloudflare Pages
 
-Le projet Pages s’appelle `cap-code`, construit dans `dist`. Pour tester localement le coach, copier `.dev.vars.example` vers `.dev.vars` puis y placer une clé Mistral valide. Ne jamais versionner ce fichier.
+Le projet Pages s’appelle `cap-code`, construit dans `dist`. Le coach utilise la liaison native Workers AI déclarée dans `wrangler.jsonc` ; aucun secret Mistral externe n’est nécessaire. L’inférence Workers AI étant distante, le test local complet du coach doit utiliser le mode distant de Wrangler.
 
 ```bash
 npm run build
-npx wrangler pages secret put MISTRAL_API_KEY --project-name=cap-code
 npx wrangler pages deploy dist --project-name=cap-code --branch=main
 ```
 

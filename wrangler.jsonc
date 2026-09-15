@@ -2,5 +2,8 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "cap-code",
   "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-09-15"
+  "compatibility_date": "2026-09-15",
+  "ai": {
+    "binding": "AI"
+  }
 }
